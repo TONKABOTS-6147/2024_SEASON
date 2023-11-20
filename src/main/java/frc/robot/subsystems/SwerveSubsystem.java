@@ -16,6 +16,7 @@ import frc.robot.Constants.ChassisConstants.DriveConstants;
 
 public class SwerveSubsystem extends SubsystemBase {
 
+  // TODO: MAKE SURE THAT THE IDs MATCH ON THE ACTUAL DRIVETRAIN!!!!!!!!!!!!
   private final SwerveModule frontLeft = new SwerveModule(
     DriveConstants.kFrontLeftDriveMotorPort,
     DriveConstants.kFrontLeftTurningMotorPort,
@@ -23,7 +24,8 @@ public class SwerveSubsystem extends SubsystemBase {
     DriveConstants.kFrontLeftTurningEncoderReversed,
     DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
     DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
-    DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
+    DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed,
+    'A');
 
   private final SwerveModule frontRight = new SwerveModule(
     DriveConstants.kFrontRightDriveMotorPort,
@@ -32,7 +34,8 @@ public class SwerveSubsystem extends SubsystemBase {
     DriveConstants.kFrontRightTurningEncoderReversed,
     DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
     DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
-    DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
+    DriveConstants.kFrontRightDriveAbsoluteEncoderReversed,
+    'B');
 
   private final SwerveModule backLeft = new SwerveModule(
     DriveConstants.kBackLeftDriveMotorPort,
@@ -41,7 +44,8 @@ public class SwerveSubsystem extends SubsystemBase {
     DriveConstants.kBackLeftTurningEncoderReversed,
     DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
     DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
-    DriveConstants.kBackLeftDriveAbsoluteEncoderReversed);
+    DriveConstants.kBackLeftDriveAbsoluteEncoderReversed,
+    'C');
 
   private final SwerveModule backRight = new SwerveModule(
     DriveConstants.kBackRightDriveMotorPort,
@@ -50,41 +54,44 @@ public class SwerveSubsystem extends SubsystemBase {
     DriveConstants.kBackRightTurningEncoderReversed,
     DriveConstants.kBackRightDriveAbsoluteEncoderPort,
     DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
-    DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
+    DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
+    'D');
    
   private AHRS gyro = new AHRS(SPI.Port.kMXP);
   
   public SwerveSubsystem() {
 
     new Thread(() -> {
+      // This thread will allow other processes to happen WHILE the gyro resets... not necessary probably *BUT*  JIC!
       try {
-        Thread.sleep(1000);
+        Thread.sleep(1000 /* ms */ );
         zeroHeading();
-      } catch (Exception e) {
+      } catch (Exception e) { 
+
       }
     }).start();
-
   }
 
-  public void zeroHeading() {
-    gyro.reset();
+  public void zeroHeading() { 
+    gyro.reset(); // makes the yaw zero
   }
 
   public double getHeading(){
-    return gyro.getYaw();
+    return gyro.getYaw(); // -180 to 180 
   }
 
-  public Rotation2d getRotation2d(){
+  public Rotation2d getRotation2d() {
     return Rotation2d.fromDegrees(getHeading());
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Robot Heading", getHeading());
+    SmartDashboard.putNumber("Robot Heading: ", getHeading());
   }
 
-  public void stopModules() {
+  // Necessary to switch from Percent to Closed Loop Velocity...?
+  public void stopModules () {
     frontLeft.stop();
     frontRight.stop();
     backLeft.stop();
@@ -93,7 +100,12 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void setModuleStates(SwerveModuleState[] desiredStates){
     //TODO: i think we still have to use the below line but double check and also find out why its broken im too tired to figure it out rn
-    SwerveDriveKinematics.normalizeWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond); 
+    /* 
+    90% sure we don't need the below line because we are using closed loop velocity control, which means that if
+    we set joystick forward = x m/s, then it won't go above x; every value from -1 to 1 will be proportional to x
+    */  
+    
+    // SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond); // is .normalizeWheelSpeeds() in 0 to Auto... https://www.chiefdelphi.com/t/normalizewheelspeeds/411155
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]);
     backLeft.setDesiredState(desiredStates[2]);
