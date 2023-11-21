@@ -3,6 +3,10 @@
 package frc.robot.subsystems;
 
 
+import javax.print.attribute.standard.PrinterInfo;
+import javax.security.auth.x500.X500Principal;
+import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -14,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 // import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ChassisConstants;
 
 public class SwerveModule extends SubsystemBase {
 
@@ -29,8 +34,8 @@ public class SwerveModule extends SubsystemBase {
                       boolean driveMotorReversed, boolean turningMotorReversed, 
                       int absEncoderID, double absEncoderOffset, 
                       boolean absEncoderReversed, char id) {  
-    
-    // this.absEncoderOffsetRad = absEncoderOffset; // degrees or radians!??
+     
+    // this.absEncoderOffsetRad = absEncoderOffset; // degrees or radians!?? this is prob radians
     // this.absEncoderReversed = absEncoderReversed; // needed?
 
     this.absEncoder = new CANCoder(absEncoderID);
@@ -63,21 +68,27 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public double getTurningPosition() {
-    return this.turningMotor.getSelectedSensorPosition(); // raw units
+    double turnDegrees = (this.turningMotor.getSelectedSensorPosition() * 360) / 2048; // wants radians
+    return Math.toRadians(turnDegrees);
   }
 
   // Get Velocities:
   public double getDriveVelocity() {
-    return this.driveMotor.getSelectedSensorVelocity(); // raw units / 100ms (milliseconds)
+    // starts in raw units / 100ms (milliseconds)
+    //m / second
+    return (this.driveMotor.getSelectedSensorVelocity()*10) * (ChassisConstants.wheelCircumference / 2048);
+
   }
 
   public double getTurningVelocity() {
-    return this.turningMotor.getSelectedSensorVelocity(); // raw units / 100ms (milliseconds)
+    double ticksPer = this.turningMotor.getSelectedSensorVelocity(); // raw units / 100ms (milliseconds)
+    ticksPer *= 10; // raw units / second (1000ms)
+    return ticksPer * (360 / 2048);
   }
 
   // Encoder Angle Stuff:
-  public double getAbsEncoderInFalconUnits() { // Need for absEncoder: initial offset handling
-    return absEncoder.getAbsolutePosition(); //TODO: convert abs units to falcon units; -180 to 180 or 0 to 360?
+  public double getAbsEncoderInFalconUnits() {
+    return (absEncoder.getAbsolutePosition() * 2048)/360; // converts degrees to falcon encoder units.
   }
 
   public void initEncoderPosition(){
@@ -87,8 +98,7 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public SwerveModuleState getState() {
-    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition()));
-    // TODO: look into what units the SwerveModuleState takes, i don't think it takes what we are giving it currently
+    return new SwerveModuleState(getDriveVelocity() /* TO METERS PER SECOND */, new Rotation2d(getTurningPosition()));
   }
 
   public void setDesiredState(SwerveModuleState state){

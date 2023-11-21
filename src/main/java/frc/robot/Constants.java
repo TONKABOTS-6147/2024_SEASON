@@ -18,7 +18,7 @@ public final class Constants {
     public static final double trackWidth = Units.inchesToMeters(21.73);
     public static final double wheelBase = Units.inchesToMeters(21.73);
     public static final double swerveWheelDiameterMeters = Units.inchesToMeters(4.0);
-
+    public static final double wheelCircumference = 2 * Math.PI * swerveWheelDiameterMeters / 2;  
 
     /* Module Gear Ratios */
     // TODO: do this
