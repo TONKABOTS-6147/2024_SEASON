@@ -5,8 +5,13 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.ChassisConstants.OIConstants;
+import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.subsystems.SwerveSubsystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -17,11 +22,19 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  
+  private final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
 
   public RobotContainer() {
+
+    swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
+      swerveSubsystem, 
+      () -> -driverJoystick.getRawAxis(OIConstants.kDriverYAxis), 
+      () -> driverJoystick.getRawAxis(OIConstants.kDriverXAxis), 
+      () -> driverJoystick.getRawAxis(OIConstants.kDriverRotAxis),
+      () -> !driverJoystick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+
     configureBindings();
   }
 
@@ -35,6 +48,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    new JoystickButton(driverJoystick, 2).onTrue((() -> swerveSubsystem.zeroHeading())); // aparently doesn't accept lamba functions
   }
 
   /**

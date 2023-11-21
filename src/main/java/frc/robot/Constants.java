@@ -41,7 +41,7 @@ public final class Constants {
 //   }
 
   public static final class DriveConstants {
-
+      //TODO: go through all values and make sure they are correct for our robot!!!
       public static final double kTrackWidth = Units.inchesToMeters(21);
       // Distance between right and left wheels
       public static final double kWheelBase = Units.inchesToMeters(25.5);
@@ -113,16 +113,16 @@ public final class Constants {
 //                       kMaxAngularAccelerationRadiansPerSecondSquared);
 //   }
 
-//   public static final class OIConstants {
-//       public static final int kDriverControllerPort = 0;
+  public static final class OIConstants {
+      public static final int kDriverControllerPort = 0;
 
-//       public static final int kDriverYAxis = 1;
-//       public static final int kDriverXAxis = 0;
-//       public static final int kDriverRotAxis = 4;
-//       public static final int kDriverFieldOrientedButtonIdx = 1;
+      public static final int kDriverYAxis = 1;
+      public static final int kDriverXAxis = 0;
+      public static final int kDriverRotAxis = 4;
+      public static final int kDriverFieldOrientedButtonIdx = 1;
 
-//       public static final double kDeadband = 0.05;
-//   }
+      public static final double kDeadband = 0.05;
+  }
 // }
   }
 }
