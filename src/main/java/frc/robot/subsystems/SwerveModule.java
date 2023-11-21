@@ -49,8 +49,8 @@ public class SwerveModule extends SubsystemBase {
     driveMotor.setInverted(driveMotorReversed);
     turningMotor.setInverted(turningMotorReversed);
 
-    driveMotor.config_kP(0, 0.1);
-    turningMotor.config_kP(0, 0.1);
+    driveMotor.config_kP(0, 0.05);
+    turningMotor.config_kP(0, 0.3);
   }
 
   public void resetPositon (TalonFX motor) {

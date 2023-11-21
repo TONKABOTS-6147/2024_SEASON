@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ChassisConstants.OIConstants;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -48,7 +49,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new JoystickButton(driverJoystick, 2).onTrue((() -> swerveSubsystem.zeroHeading())); // aparently doesn't accept lamba functions
+    new JoystickButton(driverJoystick, 2).onTrue(new ZeroHeadingCmd(swerveSubsystem));
   }
 
   /**
