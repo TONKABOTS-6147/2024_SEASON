@@ -116,16 +116,15 @@ public class SwerveModule extends SubsystemBase {
     double speedAdjustedForRatio = speedTicksPer100ms * ChassisConstants.driveGearRatio; 
   
     double angleDeg = state.angle.getDegrees();
-    double angleTicksPer100ms = angleDeg * (360 / 2048);
+    double angleTicksPer100ms = angleDeg * (2048 / 360);
     double angleAdjustedForRatio = angleTicksPer100ms * ChassisConstants.angleGearRatio;
 
-    // driveMotor.set(ControlMode.Velocity, (state.speedMetersPerSecond / 10) * (2048 / ChassisConstants.wheelCircumference)); // ticks / 100ms
-    // turningMotor.setSelectedSensorPosition(state.angle.getDegrees() * (360 / 2048)); 
-
-    driveMotor.set(ControlMode.Velocity, speedAdjustedForRatio); // ticks / 100ms
-    turningMotor.setSelectedSensorPosition(angleAdjustedForRatio); 
 
     SmartDashboard.putString("Swerve state " + this.id + " | " + this.position + " Module" + ": ", state.toString()); //NOTE: what is the output really?! we will see on dashboard when startup
+
+
+    driveMotor.set(ControlMode.Velocity, speedAdjustedForRatio); // ticks / 100ms
+    turningMotor.set(ControlMode.Position, angleAdjustedForRatio);
   }
 
   public void stop() {
@@ -138,6 +137,6 @@ public class SwerveModule extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
+    SmartDashboard.putNumber("Absolute Encoder Position" + this.id + ": ", absEncoder.getAbsolutePosition()); // degs
   }
 }
