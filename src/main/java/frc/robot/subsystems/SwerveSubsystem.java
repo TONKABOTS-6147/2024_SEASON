@@ -25,7 +25,8 @@ public class SwerveSubsystem extends SubsystemBase {
     DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
     DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
     DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed,
-    'A');
+    'A',
+    "Front Left");
 
   private final SwerveModule frontRight = new SwerveModule(
     DriveConstants.kFrontRightDriveMotorPort,
@@ -35,7 +36,8 @@ public class SwerveSubsystem extends SubsystemBase {
     DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
     DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
     DriveConstants.kFrontRightDriveAbsoluteEncoderReversed,
-    'B');
+    'B',
+    "Front Right");
 
   private final SwerveModule backLeft = new SwerveModule(
     DriveConstants.kBackLeftDriveMotorPort,
@@ -45,7 +47,8 @@ public class SwerveSubsystem extends SubsystemBase {
     DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
     DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
     DriveConstants.kBackLeftDriveAbsoluteEncoderReversed,
-    'C');
+    'C',
+    "Back Left");
 
   private final SwerveModule backRight = new SwerveModule(
     DriveConstants.kBackRightDriveMotorPort,
@@ -55,7 +58,8 @@ public class SwerveSubsystem extends SubsystemBase {
     DriveConstants.kBackRightDriveAbsoluteEncoderPort,
     DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
     DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
-    'D');
+    'D',
+    "Back Right");
    
   private AHRS gyro = new AHRS(SPI.Port.kMXP);
   
@@ -105,7 +109,7 @@ public class SwerveSubsystem extends SubsystemBase {
     we set joystick forward = x m/s, then it won't go above x; every value from -1 to 1 will be proportional to x
     */  
     
-    // SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond); // is .normalizeWheelSpeeds() in 0 to Auto... https://www.chiefdelphi.com/t/normalizewheelspeeds/411155
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond); // is .normalizeWheelSpeeds() in 0 to Auto... https://www.chiefdelphi.com/t/normalizewheelspeeds/411155
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]);
     backLeft.setDesiredState(desiredStates[2]);

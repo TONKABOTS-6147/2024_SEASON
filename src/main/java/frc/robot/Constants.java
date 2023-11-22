@@ -21,12 +21,8 @@ public final class Constants {
     public static final double wheelCircumference = 2 * Math.PI * swerveWheelDiameterMeters / 2;  
 
     /* Module Gear Ratios */
-    // TODO: do this
-    // public static final double driveGearRatio = chosenModule.driveGearRatio;
-    // public static final double steerGearRatio = chosenModule.angleGearRatio;
-
-
-
+    public static final double driveGearRatio = (6.75 / 1.0); // Line 109 COTSFalconSwerveConstants.java
+    public static final double angleGearRatio = ((150.0 / 7.0) / 1.0); // Line 74 COTSFalconSwerveConstants.java
 
 //below is from 0 to auto github
     //     public static final class ModuleConstants {
@@ -120,7 +116,7 @@ public final class Constants {
 
       public static final int kDriverYAxis = 1;
       public static final int kDriverXAxis = 0;
-      public static final int kDriverRotAxis = 4;
+      public static final int kDriverRotAxis = 2;
       public static final int kDriverFieldOrientedButtonIdx = 1;
 
       public static final double kDeadband = 0.05;

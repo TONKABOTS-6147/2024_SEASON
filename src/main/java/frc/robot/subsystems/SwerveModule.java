@@ -26,6 +26,7 @@ public class SwerveModule extends SubsystemBase {
   private final TalonFX turningMotor;
   private final CANCoder absEncoder;
   private final char id;
+  private final String position;
   // private final double absEncoderOffsetRad; // angle; prob the same as angleOffset in 364's code
   // private final boolean absEncoderReversed;
 
@@ -33,7 +34,7 @@ public class SwerveModule extends SubsystemBase {
   public SwerveModule(int driveMotorID, int turningMotorID, 
                       boolean driveMotorReversed, boolean turningMotorReversed, 
                       int absEncoderID, double absEncoderOffset, 
-                      boolean absEncoderReversed, char id) {  
+                      boolean absEncoderReversed, char id, String position) {  
      
     // this.absEncoderOffsetRad = absEncoderOffset; // degrees or radians!?? this is prob radians
     // this.absEncoderReversed = absEncoderReversed; // needed?
@@ -43,6 +44,7 @@ public class SwerveModule extends SubsystemBase {
     this.driveMotor = new TalonFX(driveMotorID);
     this.turningMotor = new TalonFX(turningMotorID);
     this.id = id;
+    this.position = position;
     driveMotor.configFactoryDefault();
     turningMotor.configFactoryDefault();
 
@@ -88,7 +90,7 @@ public class SwerveModule extends SubsystemBase {
 
   // Encoder Angle Stuff:
   public double getAbsEncoderInFalconUnits() {
-    return (absEncoder.getAbsolutePosition() * 2048)/360; // converts degrees to falcon encoder units.
+    return (absEncoder.getAbsolutePosition() * 2048) / 360; // converts degrees to falcon encoder units.
   }
 
   public void initEncoderPosition(){
@@ -106,14 +108,24 @@ public class SwerveModule extends SubsystemBase {
       stop();
       return;
     }
-
     state = SwerveModuleState.optimize(state, getState().angle); 
-    /*
-    TODO: ^ not sure if this will work or not... should make it never have to turn more than 90 degrees. COMMENT OUT IF CAUSING ISSUES ^ 
-    */
-    driveMotor.set(ControlMode.Velocity, state.speedMetersPerSecond);
-    turningMotor.setSelectedSensorPosition(state.angle.getRadians()); //TODO: this doesn't take radians, convert radians to encoder units, make sure it allows for 
-    SmartDashboard.putString("Swerve state " + this.id + ": ", state.toString()); //NOTE: what is the output really?! we will see on dashboard when startup
+ 
+    // Convert state speed and position to CTRE friendly ones
+    double speedMPS = state.speedMetersPerSecond;
+    double speedTicksPer100ms = (speedMPS  / 10) * (2048 / ChassisConstants.wheelCircumference);
+    double speedAdjustedForRatio = speedTicksPer100ms * ChassisConstants.driveGearRatio; 
+  
+    double angleDeg = state.angle.getDegrees();
+    double angleTicksPer100ms = angleDeg * (360 / 2048);
+    double angleAdjustedForRatio = angleTicksPer100ms * ChassisConstants.angleGearRatio;
+
+    // driveMotor.set(ControlMode.Velocity, (state.speedMetersPerSecond / 10) * (2048 / ChassisConstants.wheelCircumference)); // ticks / 100ms
+    // turningMotor.setSelectedSensorPosition(state.angle.getDegrees() * (360 / 2048)); 
+
+    driveMotor.set(ControlMode.Velocity, speedAdjustedForRatio); // ticks / 100ms
+    turningMotor.setSelectedSensorPosition(angleAdjustedForRatio); 
+
+    SmartDashboard.putString("Swerve state " + this.id + " | " + this.position + " Module" + ": ", state.toString()); //NOTE: what is the output really?! we will see on dashboard when startup
   }
 
   public void stop() {
