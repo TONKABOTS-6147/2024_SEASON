@@ -27,7 +27,7 @@ public class SwerveModule extends SubsystemBase {
   private final CANCoder absEncoder;
   private final char id;
   private final String position;
-  // private final double absEncoderOffsetRad; // angle; prob the same as angleOffset in 364's code
+  private final double absEncoderOffset;
   // private final boolean absEncoderReversed;
 
 
@@ -36,7 +36,7 @@ public class SwerveModule extends SubsystemBase {
                       int absEncoderID, double absEncoderOffset, 
                       boolean absEncoderReversed, char id, String position) {  
      
-    // this.absEncoderOffsetRad = absEncoderOffset; // degrees or radians!?? this is prob radians
+    this.absEncoderOffset = absEncoderOffset;
     // this.absEncoderReversed = absEncoderReversed; // needed?
 
     this.absEncoder = new CANCoder(absEncoderID);
@@ -90,11 +90,11 @@ public class SwerveModule extends SubsystemBase {
 
   // Encoder Angle Stuff:
   public double getAbsEncoderInFalconUnits() {
-    return (absEncoder.getAbsolutePosition() * 2048) / 360; // converts degrees to falcon encoder units.
+    double adjustedAbsEncoderPos = absEncoder.getAbsolutePosition() - this.absEncoderOffset;
+    return (adjustedAbsEncoderPos * 2048) / 360; // converts degrees to falcon encoder units.
   }
 
   public void initEncoderPosition(){
-    this.driveMotor.setSelectedSensorPosition(0);
     double turningPos = getAbsEncoderInFalconUnits();
     this.turningMotor.setSelectedSensorPosition(turningPos);
   }
@@ -102,13 +102,14 @@ public class SwerveModule extends SubsystemBase {
   public SwerveModuleState getState() {
     return new SwerveModuleState(getDriveVelocity() /* TO METERS PER SECOND */, new Rotation2d(getTurningPosition()));
   }
+  
 
   public void setDesiredState(SwerveModuleState state){
     if (Math.abs(state.speedMetersPerSecond) < 0.001) {
       stop();
       return;
     }
-    state = SwerveModuleState.optimize(state, getState().angle); 
+    // state = SwerveModuleState.optimize(state, getState().angle); 
  
     // Convert state speed and position to CTRE friendly ones
     double speedMPS = state.speedMetersPerSecond;
