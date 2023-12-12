@@ -57,7 +57,7 @@ public class SwerveModule extends SubsystemBase {
     turningMotor.setInverted(turningMotorReversed);
 
     driveMotor.config_kP(0, 0.05);
-    turningMotor.config_kP(0, 0.3);
+    turningMotor.config_kP(0, 0.6);
   }
 
   public void resetPositon (TalonFX motor) {
@@ -90,8 +90,8 @@ public class SwerveModule extends SubsystemBase {
 
   // Encoder Angle Stuff:
   public double getAbsEncoderInFalconUnits() {
-    double adjustedAbsEncoderPos = absEncoder.getAbsolutePosition() - this.absEncoderOffset;
-    return (adjustedAbsEncoderPos * 2048) / 360; // converts degrees to falcon encoder units.
+    double adjustedAbsEncoderPos = absEncoder.getAbsolutePosition() - this.absEncoderOffset;  //double checked
+    return (adjustedAbsEncoderPos * 2048) / 360; // converts degrees to falcon encoder units.  //double checked
   }
 
   public void initEncoderPosition(){
