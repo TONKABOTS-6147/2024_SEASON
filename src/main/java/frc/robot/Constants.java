@@ -94,7 +94,6 @@ public final class Constants {
       
 
 
-
       public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
       public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
