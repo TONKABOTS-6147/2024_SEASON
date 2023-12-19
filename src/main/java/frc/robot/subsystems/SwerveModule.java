@@ -65,43 +65,43 @@ public class SwerveModule extends SubsystemBase {
   }
 
   // Get Positions:
-  public double getDrivePosition() {
-    return this.driveMotor.getSelectedSensorPosition(); // raw units
-  }
+  // public double getDrivePosition() {
+  //   return this.driveMotor.getSelectedSensorPosition(); // raw units
+  // }
 
-  public double getTurningPosition() {
-    double turnDegrees = (this.turningMotor.getSelectedSensorPosition() * 360) / 2048; // wants radians
-    return Math.toRadians(turnDegrees);
-  }
+  // public double getTurningPosition() {
+  //   double turnDegrees = (this.turningMotor.getSelectedSensorPosition() * 360) / 2048; // wants radians
+  //   return Math.toRadians(turnDegrees);
+  // }
 
   // Get Velocities:
-  public double getDriveVelocity() {
-    // starts in raw units / 100ms (milliseconds)
-    //m / second
-    return (this.driveMotor.getSelectedSensorVelocity()*10) * (ChassisConstants.wheelCircumference / 2048);
+  // public double getDriveVelocity() {
+  //   // starts in raw units / 100ms (milliseconds)
+  //   //m / second
+  //   return (this.driveMotor.getSelectedSensorVelocity()*10) * (ChassisConstants.wheelCircumference / 2048);
+  // }
 
-  }
+  // public double getTurningVelocity() {
+  //   double ticksPer = this.turningMotor.getSelectedSensorVelocity(); // raw units / 100ms (milliseconds)
+  //   ticksPer *= 10; // raw units / second (1000ms)
+  //   return ticksPer * (360 / 2048);
+  // }
 
-  public double getTurningVelocity() {
-    double ticksPer = this.turningMotor.getSelectedSensorVelocity(); // raw units / 100ms (milliseconds)
-    ticksPer *= 10; // raw units / second (1000ms)
-    return ticksPer * (360 / 2048);
-  }
-
-  // Encoder Angle Stuff:
-  public double getAbsEncoderInFalconUnits() {
-    double adjustedAbsEncoderPos = absEncoder.getAbsolutePosition() - this.absEncoderOffset;  //double checked
-    return (adjustedAbsEncoderPos * 2048) / 360; // converts degrees to falcon encoder units.  //double checked
+    public double convertOffset() {
+    double adjustedAbsEncoderPos = absEncoder.getAbsolutePosition() - this.absEncoderOffset;
+    double ticks = (adjustedAbsEncoderPos * 2048) / 360; // converts degrees to falcon encoder units. 
+    return ticks * ChassisConstants.angleGearRatio;
   }
 
   public void initEncoderPosition(){
-    double turningPos = getAbsEncoderInFalconUnits();
+    double turningPos = convertOffset();
     this.turningMotor.setSelectedSensorPosition(turningPos);
   }
 
-  public SwerveModuleState getState() {
-    return new SwerveModuleState(getDriveVelocity() /* TO METERS PER SECOND */, new Rotation2d(getTurningPosition()));
-  }
+  //used for optimize later...
+  // public SwerveModuleState getState() {
+  //   return new SwerveModuleState(getDriveVelocity() /* TO METERS PER SECOND */, new Rotation2d(getTurningPosition()));
+  // }
   
 
   public void setDesiredState(SwerveModuleState state){
@@ -117,8 +117,8 @@ public class SwerveModule extends SubsystemBase {
     double speedAdjustedForRatio = speedTicksPer100ms * ChassisConstants.driveGearRatio; 
   
     double angleDeg = state.angle.getDegrees();
-    double angleTicksPer100ms = angleDeg * (2048 / 360);
-    double angleAdjustedForRatio = angleTicksPer100ms * ChassisConstants.angleGearRatio;
+    double angleToEncoderUnits = angleDeg * (2048 / 360);
+    double angleAdjustedForRatio = angleToEncoderUnits * ChassisConstants.angleGearRatio;
 
 
     SmartDashboard.putString("Swerve state " + this.id + " | " + this.position + " Module" + ": ", state.toString()); //NOTE: what is the output really?! we will see on dashboard when startup
@@ -139,5 +139,7 @@ public class SwerveModule extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Absolute Encoder Position" + this.id + ": ", absEncoder.getAbsolutePosition()); // degs
+    SmartDashboard.putNumber("CONV " + this.id + ": ", (this.turningMotor.getSelectedSensorPosition() * 360) / 2048); // degs
+    SmartDashboard.putNumber("RAW " + this.id + ": ", this.turningMotor.getSelectedSensorPosition()); // degs
   }
 }
