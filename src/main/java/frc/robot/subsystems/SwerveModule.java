@@ -47,7 +47,9 @@ public class SwerveModule extends SubsystemBase {
     this.position = position;
     driveMotor.configFactoryDefault();
     turningMotor.configFactoryDefault();
+    absEncoder.configFactoryDefault();
 
+    absEncoder.configSensorDirection(absEncoderReversed);
     driveMotor.setNeutralMode(NeutralMode.Brake);
     turningMotor.setNeutralMode(NeutralMode.Brake);
 
@@ -55,14 +57,15 @@ public class SwerveModule extends SubsystemBase {
 
     driveMotor.setInverted(driveMotorReversed);
     turningMotor.setInverted(turningMotorReversed);
+    
 
     driveMotor.config_kP(0, 0.05);
     turningMotor.config_kP(0, 0.6);
   }
 
-  public void resetPositon (TalonFX motor) {
-    motor.setSelectedSensorPosition(0);
-  }
+  // public void resetPositon (TalonFX motor) {
+  //   motor.setSelectedSensorPosition(0);
+  // }
 
   // Get Positions:
   // public double getDrivePosition() {
@@ -87,15 +90,17 @@ public class SwerveModule extends SubsystemBase {
   //   return ticksPer * (360 / 2048);
   // }
 
-    public double convertOffset() {
+  public double convertOffset() {
     double adjustedAbsEncoderPos = absEncoder.getAbsolutePosition() - this.absEncoderOffset;
-    double ticks = (adjustedAbsEncoderPos * 2048) / 360; // converts degrees to falcon encoder units. 
+    System.out.println(adjustedAbsEncoderPos);
+    double ticks = adjustedAbsEncoderPos * (2048.0 / 360.0); // converts degrees to falcon encoder units. 
     return ticks * ChassisConstants.angleGearRatio;
   }
 
   public void initEncoderPosition(){
     double turningPos = convertOffset();
     this.turningMotor.setSelectedSensorPosition(turningPos);
+    System.out.println(turningPos);
   }
 
   //used for optimize later...
@@ -116,8 +121,8 @@ public class SwerveModule extends SubsystemBase {
     double speedTicksPer100ms = (speedMPS  / 10) * (2048 / ChassisConstants.wheelCircumference);
     double speedAdjustedForRatio = speedTicksPer100ms * ChassisConstants.driveGearRatio; 
   
-    double angleDeg = state.angle.getDegrees();
-    double angleToEncoderUnits = angleDeg * (2048 / 360);
+    double targetAngle = state.angle.getDegrees();
+    double angleToEncoderUnits = targetAngle * (2048.0 / 360.0);
     double angleAdjustedForRatio = angleToEncoderUnits * ChassisConstants.angleGearRatio;
 
 

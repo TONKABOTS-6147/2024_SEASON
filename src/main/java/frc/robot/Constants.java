@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+// CANcoder is from 0-360
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -58,10 +58,10 @@ public final class Constants {
       public static final int kFrontRightTurningMotorPort = 24;
       public static final int kBackRightTurningMotorPort = 21;
 
-      public static final boolean kFrontLeftTurningEncoderReversed = true;
-      public static final boolean kBackLeftTurningEncoderReversed = true;
-      public static final boolean kFrontRightTurningEncoderReversed = true;
-      public static final boolean kBackRightTurningEncoderReversed = true;
+      public static final boolean kFrontLeftTurningEncoderReversed = false;
+      public static final boolean kBackLeftTurningEncoderReversed = false;
+      public static final boolean kFrontRightTurningEncoderReversed = false;
+      public static final boolean kBackRightTurningEncoderReversed = false;
 
       public static final boolean kFrontLeftDriveEncoderReversed = true;
       public static final boolean kBackLeftDriveEncoderReversed = true;
@@ -73,16 +73,25 @@ public final class Constants {
       public static final int kFrontRightDriveAbsoluteEncoderPort = 22; // D
       public static final int kBackRightDriveAbsoluteEncoderPort = 19; // C
 
-      public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
-      public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
-      public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
-      public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
+      public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = true;
+      public static final boolean kBackLeftDriveAbsoluteEncoderReversed = true;
+      public static final boolean kFrontRightDriveAbsoluteEncoderReversed = true;
+      public static final boolean kBackRightDriveAbsoluteEncoderReversed = true;
 
       // TODO: radians?
-      public static final double kFrontLeftDriveAbsoluteEncoderOffsetDeg = 27.07; // A
-      public static final double kBackLeftDriveAbsoluteEncoderOffsetDeg = 64.24; // B
-      public static final double kFrontRightDriveAbsoluteEncoderOffsetDeg = 20.39; // D
-      public static final double kBackRightDriveAbsoluteEncoderOffsetDeg = 332.6; // C
+      public static final double kFrontLeftDriveAbsoluteEncoderOffsetDeg = 333.45; // A
+      public static final double kBackLeftDriveAbsoluteEncoderOffsetDeg = 297.15; // B
+      public static final double kFrontRightDriveAbsoluteEncoderOffsetDeg = 340.93; // D
+      public static final double kBackRightDriveAbsoluteEncoderOffsetDeg = 90.90; // C
+      //inverted cancoder to match above
+      // public static final double kFrontLeftDriveAbsoluteEncoderOffsetDeg = 29.8; // A
+      // public static final double kBackLeftDriveAbsoluteEncoderOffsetDeg = 62.75; // B
+      // public static final double kFrontRightDriveAbsoluteEncoderOffsetDeg = 18.98; // D
+      // public static final double kBackRightDriveAbsoluteEncoderOffsetDeg = 88.5; // C
+      // public static final double kFrontLeftDriveAbsoluteEncoderOffsetDeg = 27.07; // A
+      // public static final double kBackLeftDriveAbsoluteEncoderOffsetDeg = 64.24; // B
+      // public static final double kFrontRightDriveAbsoluteEncoderOffsetDeg = 20.39; // D
+      // public static final double kBackRightDriveAbsoluteEncoderOffsetDeg = 332.6; // C
       // public static final double kFrontLeftDriveAbsoluteEncoderOffsetDeg = 205.6640625; // A
       // public static final double kBackLeftDriveAbsoluteEncoderOffsetDeg = 243.01; // B
       // public static final double kFrontRightDriveAbsoluteEncoderOffsetDeg = 19.33; // D
