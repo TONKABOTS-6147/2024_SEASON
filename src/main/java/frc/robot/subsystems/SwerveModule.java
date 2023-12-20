@@ -63,32 +63,36 @@ public class SwerveModule extends SubsystemBase {
     turningMotor.config_kP(0, 0.1);
   }
 
-  // public void resetPositon (TalonFX motor) {
-  //   motor.setSelectedSensorPosition(0);
-  // }
+  public void resetPositon (TalonFX motor) {
+    motor.setSelectedSensorPosition(0);
+  }
 
   // Get Positions:
-  // public double getDrivePosition() {
-  //   return this.driveMotor.getSelectedSensorPosition(); // raw units
-  // }
+  public double getDrivePosition() {
+    return this.driveMotor.getSelectedSensorPosition(); // raw units
+  }
 
-  // public double getTurningPosition() {
-  //   double turnDegrees = (this.turningMotor.getSelectedSensorPosition() * 360) / 2048; // wants radians
-  //   return Math.toRadians(turnDegrees);
-  // }
+  public double getTurningPositionRad() {
+    double turnDegrees = (this.turningMotor.getSelectedSensorPosition() * 360.0) / 2048.0 * ChassisConstants.angleGearRatio; 
+    return Math.toRadians(turnDegrees);
+  }
+  public double getTurningPositionDeg() {
+    double turnDegrees = (this.turningMotor.getSelectedSensorPosition() * 360.0) / 2048.0 * ChassisConstants.angleGearRatio; 
+    return turnDegrees;
+  }
 
   // Get Velocities:
-  // public double getDriveVelocity() {
-  //   // starts in raw units / 100ms (milliseconds)
-  //   //m / second
-  //   return (this.driveMotor.getSelectedSensorVelocity()*10) * (ChassisConstants.wheelCircumference / 2048);
-  // }
+  public double getDriveVelocity() {
+    // starts in raw units / 100ms (milliseconds)
+    //m / second
+    return (this.driveMotor.getSelectedSensorVelocity()*10) * (ChassisConstants.wheelCircumference / 2048);
+  }
 
-  // public double getTurningVelocity() {
-  //   double ticksPer = this.turningMotor.getSelectedSensorVelocity(); // raw units / 100ms (milliseconds)
-  //   ticksPer *= 10; // raw units / second (1000ms)
-  //   return ticksPer * (360 / 2048);
-  // }
+  public double getTurningVelocity() {
+    double ticksPer = this.turningMotor.getSelectedSensorVelocity(); // raw units / 100ms (milliseconds)
+    ticksPer *= 10; // raw units / second (1000ms)
+    return ticksPer * (360 / 2048);
+  }
 
   public double convertOffset() {
     double adjustedAbsEncoderPos = absEncoder.getAbsolutePosition() - this.absEncoderOffset;
@@ -115,19 +119,45 @@ public class SwerveModule extends SubsystemBase {
       return;
     }
     // state = SwerveModuleState.optimize(state, getState().angle); 
- 
+
     // Convert state speed and position to CTRE friendly ones
     double speedMPS = state.speedMetersPerSecond;
     double speedTicksPer100ms = (speedMPS  / 10) * (2048 / ChassisConstants.wheelCircumference);
     double speedAdjustedForRatio = speedTicksPer100ms * ChassisConstants.driveGearRatio; 
   
     double targetAngle = state.angle.getDegrees();
+    double currentPosition = getTurningPositionDeg();
+    if (currentPosition < 0){
+      currentPosition += 360;
+    }
+    if (targetAngle < 0){
+      targetAngle += 360;
+    }
+    
+    if ((Math.abs(targetAngle - currentPosition) > 90) && (Math.abs(targetAngle - currentPosition) < 270)) {
+      targetAngle = (targetAngle + 180.0) % 360.0;
+      SmartDashboard.putString("current deg" + this.id + " | " + this.position + " Module" + ": ", Double.toString(getTurningPositionDeg())); 
+      SmartDashboard.putString("target deg" + this.id + " | " + this.position + " Module" + ": ", Double.toString(targetAngle)); //NOTE: what is the output really?! we will see on dashboard when startup
+
+      speedAdjustedForRatio *= -1;
+    }
     double angleToEncoderUnits = targetAngle * (2048.0 / 360.0);
     double angleAdjustedForRatio = angleToEncoderUnits * ChassisConstants.angleGearRatio;
 
 
-    SmartDashboard.putString("Swerve state " + this.id + " | " + this.position + " Module" + ": ", state.toString()); //NOTE: what is the output really?! we will see on dashboard when startup
+    // state = SwerveModuleState.optimize(state, new Rotation2d(getTurningPosition()));
 
+
+    // Convert state speed and position to CTRE friendly ones
+    // double speedMPS = state.speedMetersPerSecond;
+    // double speedTicksPer100ms = (speedMPS  / 10) * (2048 / ChassisConstants.wheelCircumference);
+    // double speedAdjustedForRatio = speedTicksPer100ms * ChassisConstants.driveGearRatio; 
+  
+    // double targetAngle = state.angle.getDegrees();  
+    // double angleToEncoderUnits = targetAngle * (2048.0 / 360.0);
+    // double angleAdjustedForRatio = angleToEncoderUnits * ChassisConstants.angleGearRatio;
+
+    SmartDashboard.putString("Swerve state " + this.id + " | " + this.position + " Module" + ": ", state.toString()); //NOTE: what is the output really?! we will see on dashboard when startup
 
     driveMotor.set(ControlMode.Velocity, speedAdjustedForRatio); // ticks / 100ms
     turningMotor.set(ControlMode.Position, angleAdjustedForRatio);
