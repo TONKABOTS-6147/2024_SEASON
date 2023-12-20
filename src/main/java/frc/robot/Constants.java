@@ -65,8 +65,8 @@ public final class Constants {
 
       public static final boolean kFrontLeftDriveEncoderReversed = true;
       public static final boolean kBackLeftDriveEncoderReversed = true;
-      public static final boolean kFrontRightDriveEncoderReversed = false;
-      public static final boolean kBackRightDriveEncoderReversed = false;
+      public static final boolean kFrontRightDriveEncoderReversed = true;
+      public static final boolean kBackRightDriveEncoderReversed = true;
 
       public static final int kFrontLeftDriveAbsoluteEncoderPort = 13; // A
       public static final int kBackLeftDriveAbsoluteEncoderPort = 16; // B
@@ -83,25 +83,6 @@ public final class Constants {
       public static final double kBackLeftDriveAbsoluteEncoderOffsetDeg = 297.15; // B
       public static final double kFrontRightDriveAbsoluteEncoderOffsetDeg = 340.93; // D
       public static final double kBackRightDriveAbsoluteEncoderOffsetDeg = 90.90; // C
-      //inverted cancoder to match above
-      // public static final double kFrontLeftDriveAbsoluteEncoderOffsetDeg = 29.8; // A
-      // public static final double kBackLeftDriveAbsoluteEncoderOffsetDeg = 62.75; // B
-      // public static final double kFrontRightDriveAbsoluteEncoderOffsetDeg = 18.98; // D
-      // public static final double kBackRightDriveAbsoluteEncoderOffsetDeg = 88.5; // C
-      // public static final double kFrontLeftDriveAbsoluteEncoderOffsetDeg = 27.07; // A
-      // public static final double kBackLeftDriveAbsoluteEncoderOffsetDeg = 64.24; // B
-      // public static final double kFrontRightDriveAbsoluteEncoderOffsetDeg = 20.39; // D
-      // public static final double kBackRightDriveAbsoluteEncoderOffsetDeg = 332.6; // C
-      // public static final double kFrontLeftDriveAbsoluteEncoderOffsetDeg = 205.6640625; // A
-      // public static final double kBackLeftDriveAbsoluteEncoderOffsetDeg = 243.01; // B
-      // public static final double kFrontRightDriveAbsoluteEncoderOffsetDeg = 19.33; // D
-      // public static final double kBackRightDriveAbsoluteEncoderOffsetDeg = 333.36; // C
-      // public static final double kFrontLeftDriveAbsoluteEncoderOffsetDeg = 34.453125; // A
-      // public static final double kBackLeftDriveAbsoluteEncoderOffsetDeg = 64.072265625; // B
-      // public static final double kFrontRightDriveAbsoluteEncoderOffsetDeg = 19.775390625; // D
-      // public static final double kBackRightDriveAbsoluteEncoderOffsetDeg = 333.544921875; // C
-      
-
 
       public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
       public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;

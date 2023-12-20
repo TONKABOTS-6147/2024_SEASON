@@ -60,7 +60,7 @@ public class SwerveModule extends SubsystemBase {
     
 
     driveMotor.config_kP(0, 0.05);
-    turningMotor.config_kP(0, 0.6);
+    turningMotor.config_kP(0, 0.1);
   }
 
   // public void resetPositon (TalonFX motor) {
