@@ -125,6 +125,7 @@ public class SwerveModule extends SubsystemBase {
     double speedTicksPer100ms = (speedMPS  / 10) * (2048 / ChassisConstants.wheelCircumference);
     double speedAdjustedForRatio = speedTicksPer100ms * ChassisConstants.driveGearRatio; 
   
+    // Converts -180 to 0 to 180 to 360
     double targetAngle = state.angle.getDegrees();
     double currentPosition = getTurningPositionDeg();
     if (currentPosition < 0){
@@ -166,7 +167,6 @@ public class SwerveModule extends SubsystemBase {
   public void stop() {
     driveMotor.set(ControlMode.PercentOutput, 0);
     turningMotor.set(ControlMode.PercentOutput, 0);
-    //TODO: not sure if this is needed because we are using closed loop velocity control rather than percent output.
   }
 
 
