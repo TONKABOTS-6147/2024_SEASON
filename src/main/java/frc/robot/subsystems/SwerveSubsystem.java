@@ -74,7 +74,13 @@ public class SwerveSubsystem extends SubsystemBase {
 
       }
     }).start();
+  
+    frontLeft.initEncoderPosition();
+    frontRight.initEncoderPosition();
+    backLeft.initEncoderPosition();
+    backRight.initEncoderPosition();
   }
+
 
   public void zeroHeading() { 
     gyro.reset(); // makes the yaw zero
