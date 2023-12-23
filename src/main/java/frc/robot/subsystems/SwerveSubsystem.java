@@ -62,7 +62,6 @@ public class SwerveSubsystem extends SubsystemBase {
     'C',
     "Back Right");
    
-  // private AHRS gyro = new AHRS(SPI.Port.kMXP);
   public static final ADIS16470_IMU imu = new ADIS16470_IMU();
 
   public SwerveSubsystem() {
@@ -85,13 +84,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
 
   public void zeroHeading() { 
-    // gyro.reset(); // makes the yaw zero
     imu.reset();
   }
 
   public double getHeading(){
-    // return gyro.getYaw(); // -180 to 180 
-    return imu.getAngle();
+    return imu.getAngle() *-1;
   }
 
   public Rotation2d getRotation2d() {
