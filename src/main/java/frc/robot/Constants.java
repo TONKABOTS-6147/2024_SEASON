@@ -83,14 +83,14 @@ public final class Constants {
       public static final double kFrontRightDriveAbsoluteEncoderOffsetDeg = 340.93; // D
       public static final double kBackRightDriveAbsoluteEncoderOffsetDeg = 90.90; // C
 
-      public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
+      public static final double kPhysicalMaxSpeedMetersPerSecond = 10;
       public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
       public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 1;
-      public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
+      public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 2;
 
       // For Rate Limiter
-      public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
+      public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 2;
       public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
   }
 
