@@ -9,6 +9,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -61,8 +62,9 @@ public class SwerveSubsystem extends SubsystemBase {
     'C',
     "Back Right");
    
-  private AHRS gyro = new AHRS(SPI.Port.kMXP);
-  
+  // private AHRS gyro = new AHRS(SPI.Port.kMXP);
+  public static final ADIS16470_IMU imu = new ADIS16470_IMU();
+
   public SwerveSubsystem() {
 
     new Thread(() -> {
@@ -83,11 +85,13 @@ public class SwerveSubsystem extends SubsystemBase {
 
 
   public void zeroHeading() { 
-    gyro.reset(); // makes the yaw zero
+    // gyro.reset(); // makes the yaw zero
+    imu.reset();
   }
 
   public double getHeading(){
-    return gyro.getYaw(); // -180 to 180 
+    // return gyro.getYaw(); // -180 to 180 
+    return imu.getAngle();
   }
 
   public Rotation2d getRotation2d() {
