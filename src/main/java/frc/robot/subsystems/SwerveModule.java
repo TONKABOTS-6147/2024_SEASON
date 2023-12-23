@@ -29,8 +29,6 @@ public class SwerveModule extends SubsystemBase {
   private final char id;
   private final String position;
   private final double absEncoderOffset;
-  // private final boolean absEncoderReversed;
-
 
   public SwerveModule(int driveMotorID, int turningMotorID, 
                       boolean driveMotorReversed, boolean turningMotorReversed, 
@@ -38,7 +36,6 @@ public class SwerveModule extends SubsystemBase {
                       boolean absEncoderReversed, char id, String position) {  
      
     this.absEncoderOffset = absEncoderOffset;
-    // this.absEncoderReversed = absEncoderReversed; // needed?
 
     this.absEncoder = new CANCoder(absEncoderID);
 
@@ -53,8 +50,6 @@ public class SwerveModule extends SubsystemBase {
     absEncoder.configSensorDirection(absEncoderReversed);
     driveMotor.setNeutralMode(NeutralMode.Brake);
     turningMotor.setNeutralMode(NeutralMode.Brake);
-
-    // ticks may need to be converted to meters/second and possibly radians
 
     driveMotor.setInverted(driveMotorReversed);
     turningMotor.setInverted(turningMotorReversed);
@@ -143,7 +138,6 @@ public class SwerveModule extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
     SmartDashboard.putNumber("Absolute Encoder Position" + this.id + ": ", absEncoder.getAbsolutePosition()); // degs
     SmartDashboard.putNumber("CONV " + this.id + ": ", (this.turningMotor.getSelectedSensorPosition() * 360) / 2048); // degs
     SmartDashboard.putNumber("RAW " + this.id + ": ", this.turningMotor.getSelectedSensorPosition()); // degs

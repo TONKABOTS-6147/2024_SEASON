@@ -78,7 +78,6 @@ public final class Constants {
       public static final boolean kFrontRightDriveAbsoluteEncoderReversed = true;
       public static final boolean kBackRightDriveAbsoluteEncoderReversed = true;
 
-      // TODO: radians?
       public static final double kFrontLeftDriveAbsoluteEncoderOffsetDeg = 333.45; // A
       public static final double kBackLeftDriveAbsoluteEncoderOffsetDeg = 297.15; // B
       public static final double kFrontRightDriveAbsoluteEncoderOffsetDeg = 340.93; // D
