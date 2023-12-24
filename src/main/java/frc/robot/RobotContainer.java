@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.ChassisConstants.OIConstants;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
+import frc.robot.subsystems.SmartMotionTest;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final SmartMotionTest smartMotionSubsystem = new SmartMotionTest();
   
   private final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
 
