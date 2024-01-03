@@ -5,11 +5,10 @@
 package frc.robot;
 
 import frc.robot.Constants.ChassisConstants.OIConstants;
-import frc.robot.commands.SetArmPosCmd;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.TestArmSubsystem;
+import frc.robot.subsystems.wpiMotionSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -25,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private final TestArmSubsystem testArmSubsystem = new TestArmSubsystem();
+  private final wpiMotionSubsystem wpiMotionSubsystem = new wpiMotionSubsystem();
   
   private final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
 
@@ -52,7 +51,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
     new JoystickButton(driverJoystick, 2).onTrue(new ZeroHeadingCmd(swerveSubsystem));
-    new JoystickButton(driverJoystick, 1).onTrue(new SetArmPosCmd(testArmSubsystem));
+    new JoystickButton(driverJoystick, 4).onTrue(wpiMotionSubsystem.setArmGoalCommand(-10));
+    new JoystickButton(driverJoystick, 1).onTrue(wpiMotionSubsystem.setArmGoalCommand(0));
+
   }
 
   /**
