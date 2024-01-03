@@ -5,10 +5,11 @@
 package frc.robot;
 
 import frc.robot.Constants.ChassisConstants.OIConstants;
+import frc.robot.commands.SetArmPosCmd;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
-import frc.robot.subsystems.SmartMotionTest;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.TestArmSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -24,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private final SmartMotionTest smartMotionSubsystem = new SmartMotionTest();
+  private final TestArmSubsystem testArmSubsystem = new TestArmSubsystem();
   
   private final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
 
@@ -44,13 +45,14 @@ public class RobotContainer {
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@linkP
    * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
     new JoystickButton(driverJoystick, 2).onTrue(new ZeroHeadingCmd(swerveSubsystem));
+    new JoystickButton(driverJoystick, 1).onTrue(new SetArmPosCmd(testArmSubsystem));
   }
 
   /**
