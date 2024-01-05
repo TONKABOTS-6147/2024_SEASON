@@ -4,8 +4,17 @@
 
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -59,7 +68,11 @@ public class SwerveSubsystem extends SubsystemBase {
     "Back Right");
    
   public static final ADIS16470_IMU imu = new ADIS16470_IMU();
+  public SwerveModulePosition[] modulePositions = null;
+  // private final ADIS16470_IMU imu = new ADIS16470_IMU();
 
+  private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, new Rotation2d(0), null);
+ 
   public SwerveSubsystem() {
 
     new Thread(() -> {
@@ -76,6 +89,21 @@ public class SwerveSubsystem extends SubsystemBase {
     frontRight.initEncoderPosition();
     backLeft.initEncoderPosition();
     backRight.initEncoderPosition();
+
+    // AutoBuilder.configureHolonomic(
+    //     this::getPose, // Robot pose supplier
+    //     this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+    //     this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+    //     this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+    //     new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+    //         new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+    //         new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+    //         4.5, // Max module speed, in m/s
+    //         0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+    //         new ReplanningConfig() // Default path replanning config. See the API for the options here
+    //     ),
+    //     this // Reference to this subsystem to set requirements
+    // );
   }
 
 
@@ -94,7 +122,37 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SwerveModulePosition frontLeftPosition = new SwerveModulePosition(frontLeft.getDrivePosition(), Rotation2d.fromDegrees(frontLeft.getTurningPositionDeg()));
+    SwerveModulePosition frontRightPosition = new SwerveModulePosition(frontRight.getDrivePosition(), Rotation2d.fromDegrees(frontRight.getTurningPositionDeg()));
+    SwerveModulePosition backLeftPosition = new SwerveModulePosition(backLeft.getDrivePosition(), Rotation2d.fromDegrees(backLeft.getTurningPositionDeg()));
+    SwerveModulePosition backRightPosition = new SwerveModulePosition(backRight.getDrivePosition(), Rotation2d.fromDegrees(backRight.getTurningPositionDeg()));
+
+    this.modulePositions = new SwerveModulePosition[]{frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition};
+    odometer.update(getRotation2d(), modulePositions);
     SmartDashboard.putNumber("Robot Heading: ", getHeading());
+    SmartDashboard.putString("Robot Location: ", getPose().getTranslation().toString());
+  }
+
+  public Pose2d getPose() {
+    return odometer.getPoseMeters();
+  }
+
+  public void resetOdometry(Pose2d pose) {
+    odometer.resetPosition(getRotation2d(), this.modulePositions, pose);
+  }
+
+  public ChassisSpeeds getRobotRelativeSpeeds() {
+    SwerveModuleState[] states = new SwerveModuleState[]{
+      frontLeft.getState(),
+      frontRight.getState(),
+      backLeft.getState(),
+      backRight.getState()
+    };
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(states);
+  }
+
+  public void driveRobotRelative() {
+    setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(getRobotRelativeSpeeds()));
   }
 
   // Necessary to switch from Percent to Closed Loop Velocity...?

@@ -15,6 +15,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 // import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 // import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -65,11 +66,13 @@ public class SwerveModule extends SubsystemBase {
 
   // Get Positions:
   public double getDrivePosition() {
-    return this.driveMotor.getSelectedSensorPosition(); // raw units
+    double encoderTicks = this.driveMotor.getSelectedSensorPosition();
+    double distance = (encoderTicks * ChassisConstants.wheelCircumference) / (2048.0 * ChassisConstants.driveGearRatio);
+    return distance;
   }
 
   public double getTurningPositionRad() {
-    double turnDegrees = (this.turningMotor.getSelectedSensorPosition() * 360.0) / 2048.0 * ChassisConstants.angleGearRatio; 
+    double turnDegrees = (this.turningMotor.getSelectedSensorPosition() * 360.0) / (2048.0 * ChassisConstants.angleGearRatio); 
     return Math.toRadians(turnDegrees);
   }
   public double getTurningPositionDeg() {
@@ -101,10 +104,9 @@ public class SwerveModule extends SubsystemBase {
     this.turningMotor.setSelectedSensorPosition(turningPos);
   }
 
-  //used for optimize later...
-  // public SwerveModuleState getState() {
-  //   return new SwerveModuleState(getDriveVelocity() /* TO METERS PER SECOND */, new Rotation2d(getTurningPosition()));
-  // }
+  public SwerveModuleState getState() {
+    return new SwerveModuleState(getDriveVelocity() /* TO METERS PER SECOND */, new Rotation2d(getTurningPositionRad()));
+  }
   
 
   public void setDesiredState(SwerveModuleState desiredState){
