@@ -6,7 +6,7 @@
     "mavenUrls": [
         "https://maven.revrobotics.com/"
     ],
-    "jsonUrl": "https://software-metadata.revrobotics.com/REVLib.json",
+    "jsonUrl": "https://software-metadata.revrobotics.com/REVLib-2023.json",
     "javaDependencies": [
         {
             "groupId": "com.revrobotics.frc",
@@ -19,7 +19,7 @@
             "groupId": "com.revrobotics.frc",
             "artifactId": "REVLib-driver",
             "version": "2023.1.3",
-            "skipInvalidPlatforms": true,
+            "skipInv    alidPlatforms": true,
             "isJar": false,
             "validPlatforms": [
                 "windowsx86-64",
