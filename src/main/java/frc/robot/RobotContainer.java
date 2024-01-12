@@ -5,13 +5,18 @@
 package frc.robot;
 
 import frc.robot.Constants.ChassisConstants.OIConstants;
+// import frc.robot.commands.ResetOdometryCommand;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.wpiMotionSubsystem;
+// import frc.robot.subsystems.wpiMotionSubsystem;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -24,8 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private final wpiMotionSubsystem wpiMotionSubsystem = new wpiMotionSubsystem();
-  
+  // private final wpiMotionSubsystem wpiMotionSubsystem = new wpiMotionSubsystem();
   private final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
 
   public RobotContainer() {
@@ -51,9 +55,10 @@ public class RobotContainer {
    */
   private void configureBindings() {
     new JoystickButton(driverJoystick, 2).onTrue(new ZeroHeadingCmd(swerveSubsystem));
-    new JoystickButton(driverJoystick, 4).onTrue(wpiMotionSubsystem.setArmGoalCommand(-10));
-    new JoystickButton(driverJoystick, 1).onTrue(wpiMotionSubsystem.setArmGoalCommand(0));
-
+    // Motion Profiling Stuff (not physically part of the chassis as of 01/06):
+    // new JoystickButton(driverJoystick, 4).onTrue(wpiMotionSubsystem.setArmGoalCommand(-10));
+    // new JoystickButton(driverJoystick, 1).onTrue(wpiMotionSubsystem.setArmGoalCommand(0));
+    // SmartDashboard.putData("Reset Odometry", new ResetOdometryCommand(swerveSubsystem));
   }
 
   /**
@@ -63,6 +68,13 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+    System.out.println("Running Auto...");
+    System.out.println(path.numPoints());
+
+    // Create a path following command using AutoBuilder. This will also trigger event markers.
+    return AutoBuilder.followPath(path);
+    // return new ZeroHeadingCmd(swerveSubsystem);
   }
 }
+//hi

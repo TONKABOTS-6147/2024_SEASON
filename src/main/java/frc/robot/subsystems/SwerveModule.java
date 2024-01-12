@@ -3,9 +3,7 @@
 package frc.robot.subsystems;
 
 
-import javax.print.attribute.standard.PrinterInfo;
-import javax.security.auth.x500.X500Principal;
-import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
+
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -15,7 +13,6 @@ import com.ctre.phoenix.sensors.CANCoder;
 // import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 // import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
